@@ -55,13 +55,19 @@
     </div>
 
     <script>
-      const inputTextArea = document.getElementById("inputText");
-      const outputTextArea = document.getElementById("outputText");
-      const savedText = localStorage.getItem("inputText");    
-      // Listen for input events to store the content in localStorage
-      inputTextArea.addEventListener("input", () => {
-          localStorage.setItem("inputText", inputTextArea.value);
-      });
+        const inputTextArea = document.getElementById("inputText");
+        const outputTextArea = document.getElementById("outputText");
+        const savedText = localStorage.getItem("inputText");    
+        // Listen for input events to store the content in localStorage
+        inputTextArea.addEventListener("input", () => {
+            localStorage.setItem("inputText", inputTextArea.value);
+        });
+
+        async function clearInput(){
+            inputTextArea.value = ""
+            localStorage.setItem("inputText", inputTextArea.value);
+        }
+        document.getElementById("clearButton").addEventListener("click", clearInput)
 
       async function main() {
           // Restore input text from localStorage
@@ -111,6 +117,7 @@ processed_text
         countStr()
 
         document.getElementById("processButton").addEventListener("click", countStr)
+
         }
 
       main();
