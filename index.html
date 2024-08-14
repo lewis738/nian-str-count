@@ -1,0 +1,119 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pyodide Text Processor</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .main-content {
+            display: flex;
+            flex: 1;
+            height: 95%; /* 占95%的高度 */
+        }
+        .pane {
+            width: 50%; /* 左右各占50% */
+            padding: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            font-size: 20px; /* 调整字号 */
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 5%; /* 占页面高度的5% */
+            padding: 10px;
+        }
+        button {
+            padding: 15px 30px; /* 按钮大小增加 */
+            font-size: 20px;    /* 按钮文字大小 */
+        }
+        .center-button {
+            margin: 0 auto; /* 将按钮居中 */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+</head>
+<body>
+    <div class="main-content">
+        <div class="pane">
+            <textarea id="inputText" placeholder="Enter your text here..." style="line-height: 30px;"></textarea>
+        </div>
+        <div class="pane">
+            <textarea id="outputText" readonly placeholder="Processed text will appear here..."></textarea>
+        </div>
+    </div>
+    <div class="button-container">
+        <button id="clearButton">Clear</button>
+        <button id="processButton" class="center-button">Process</button>
+    </div>
+
+    <script>
+      const inputTextArea = document.getElementById("inputText");
+      const outputTextArea = document.getElementById("outputText");
+      const savedText = localStorage.getItem("inputText");    
+      // Listen for input events to store the content in localStorage
+      inputTextArea.addEventListener("input", () => {
+          localStorage.setItem("inputText", inputTextArea.value);
+      });
+
+      async function main() {
+          // Restore input text from localStorage
+          if (savedText) {
+              inputTextArea.value = savedText;
+          }
+          dependencies = []
+          const preCode = `sys.stdout = sys.stderr = io.StringIO();`;
+
+          async function loadPyodideAndPackages() {
+            var pyodide = await loadPyodide();
+            await pyodide.loadPackage(dependencies);
+            pyodide.runPython(`import sys;import io;sys.stdout = io.StringIO()\n${preCode}`);
+            console.log("Ready!\n")
+            return pyodide;
+        }
+
+          // Load Pyodide and dependency
+          pyodideReadyPromise = loadPyodideAndPackages();
+          let pyodide = await pyodideReadyPromise;
+          await pyodide.loadPackage(["micropip"]);
+          const micropip = pyodide.pyimport("micropip");
+          await micropip.install('cn2an');
+          console.log("Dependencies Ready!")
+          // await pyodide.runPythonAsync(`import micropip;micropip.install('cn2an')`);
+          // Load Python utils
+          await pyodide.runPythonAsync(await (await fetch("./utils.py")).text());
+
+          async function countStr(){
+            console.log(inputTextArea.value)
+            const inputTextJson = JSON.stringify(inputTextArea.value);
+            console.log(inputTextJson)
+            let result = await pyodide.runPythonAsync(preCode + `
+processed_dict_dan, processed_dict_zu = process_multi_line(${inputTextJson})
+processed_dict_dan = add_up_dan(processed_dict_dan)
+processed_dict_zu = add_up_zu(processed_dict_zu)
+# 转回数组，以便显示
+processed_dict_dan = collect_v_count_dict_to_count_v_list_dict(processed_dict_dan)
+processed_zu_dict = collect_v_count_dict_to_count_v_list_dict(processed_dict_zu)
+processed_text = beautify_dict(processed_dict_dan, '单') + '\\n' + '-'*32 + '\\n' + beautify_dict(processed_zu_dict, '组')
+processed_text
+    `)
+            console.log(result)
+            outputTextArea.value = result
+
+        }
+        countStr()
+
+        document.getElementById("processButton").addEventListener("click", countStr)
+        }
+
+      main();
+    </script>
+</body>
+</html>

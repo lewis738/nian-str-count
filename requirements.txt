@@ -1,0 +1,13 @@
+altgraph==0.17.4
+cn2an==0.5.22
+importlib_metadata==8.0.0
+packaging==24.1
+pefile==2023.2.7
+pip==24.0
+proces==0.1.7
+pyinstaller==6.8.0
+pyinstaller-hooks-contrib==2024.7
+pywin32-ctypes==0.2.2
+setuptools==69.5.1
+wheel==0.43.0
+zipp==3.19.2
