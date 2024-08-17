@@ -90,16 +90,19 @@
           let pyodide = await pyodideReadyPromise;
           await pyodide.loadPackage(["micropip"]);
           const micropip = pyodide.pyimport("micropip");
+          micropip.set_index_urls([
+            "https://pypi.tuna.tsinghua.edu.cn/simple"
+            ])
           await micropip.install('cn2an');
           console.log("Dependencies Ready!")
+          // await pyodide.runPythonAsync(`import micropip;micropip.install('cn2an')`);
+          // Load Python utils
+          await pyodide.runPythonAsync(await (await fetch("./utils.py")).text());
 
           // 设置按钮为可用状态
           var button = document.getElementById('processButton');
           button.disabled = false;
           button.innerHTML  = '运行'
-          // await pyodide.runPythonAsync(`import micropip;micropip.install('cn2an')`);
-          // Load Python utils
-          await pyodide.runPythonAsync(await (await fetch("./utils.py")).text());
 
           async function countStr(){
             console.log(inputTextArea.value)
