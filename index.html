@@ -38,20 +38,20 @@
             margin: 0 auto; /* 将按钮居中 */
         }
     </style>
-    <script src="./pyodide/v0.26.2/full/pyodide.js"></script>
+    <script src="https://jsd.onmicrosoft.cn/pyodide/v0.26.2/full/pyodide.js"></script>
 </head>
 <body>
     <div class="main-content">
         <div class="pane">
-            <textarea id="inputText" placeholder="Enter your text here..." style="line-height: 30px;"></textarea>
+            <textarea id="inputText" placeholder="在此输入..." style="line-height: 30px;"></textarea>
         </div>
         <div class="pane">
-            <textarea id="outputText" readonly placeholder="Processed text will appear here..."></textarea>
+            <textarea id="outputText" readonly placeholder="结果在这..."></textarea>
         </div>
     </div>
     <div class="button-container">
-        <button id="clearButton">Clear</button>
-        <button id="processButton" class="center-button">Process</button>
+        <button id="clearButton">清空输入</button>
+        <button id="processButton" class="center-button" disabled>依赖加载中</button>
     </div>
 
     <script>
@@ -92,6 +92,11 @@
           const micropip = pyodide.pyimport("micropip");
           await micropip.install('cn2an');
           console.log("Dependencies Ready!")
+
+          // 设置按钮为可用状态
+          var button = document.getElementById('processButton');
+          button.disabled = false;
+          button.innerHTML  = '运行'
           // await pyodide.runPythonAsync(`import micropip;micropip.install('cn2an')`);
           // Load Python utils
           await pyodide.runPythonAsync(await (await fetch("./utils.py")).text());
