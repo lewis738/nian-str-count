@@ -90,9 +90,9 @@
           let pyodide = await pyodideReadyPromise;
           await pyodide.loadPackage(["micropip"]);
           const micropip = pyodide.pyimport("micropip");
-          micropip.set_index_urls([
-            "https://pypi.tuna.tsinghua.edu.cn/simple"
-            ])
+          // micropip.set_index_urls([
+          //   "https://pypi.tuna.tsinghua.edu.cn/simple"
+          //   ])
           await micropip.install('cn2an');
           console.log("Dependencies Ready!")
           // await pyodide.runPythonAsync(`import micropip;micropip.install('cn2an')`);
