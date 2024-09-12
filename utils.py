@@ -11,7 +11,7 @@ def write_to_temp(text):
     :return:
     """
     temp_path = tempfile.gettempdir()
-    with open(temp_path + 'str-count-temp.tmp', 'w') as file:
+    with open(temp_path + '\\str-count-temp.tmp', 'w') as file:
         file.write(text)
 
 
@@ -23,7 +23,7 @@ def read_from_temp():
     temp_path = tempfile.gettempdir()
     try:
         # 尝试打开并读取文件内容
-        with open(temp_path + 'str-count-temp.tmp', 'r') as file:
+        with open(temp_path + '\\str-count-temp.tmp', 'r') as file:
             return file.read()
     except FileNotFoundError:
         # 文件不存在时返回空字符串
