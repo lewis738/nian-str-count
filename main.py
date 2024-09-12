@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from utils import process_multi_line, beautify_dict, add_up_dan, add_up_zu, collect_v_count_dict_to_count_v_list_dict
+from utils import write_to_temp, read_from_temp
 
 
 def on_button_click():
     input_text = text_input.get("1.0", tk.END)
+
     processed_dict_dan, processed_dict_zu = process_multi_line(input_text)
     processed_dict_dan = add_up_dan(processed_dict_dan)
     processed_dict_zu = add_up_zu(processed_dict_zu)
@@ -38,6 +40,8 @@ frame.grid_rowconfigure(1, weight=0)  # 按钮所在行权重为0
 # 创建文本输入框
 text_input = tk.Text(frame, wrap="word")
 text_input.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 5), pady=(0, 10))
+# 在文本框中插入内容
+text_input.insert(tk.END, read_from_temp())
 
 # 创建文本显示框
 text_output = tk.Text(frame, wrap="word", state=tk.DISABLED)
@@ -49,6 +53,9 @@ button.grid(row=1, column=0, columnspan=2, pady=(5, 0))
 
 # 设置窗口关闭时的行为
 def on_closing():
+    input_text = text_input.get("1.0", tk.END)
+    write_to_temp(input_text)
+
     root.destroy()
 
 root.protocol("WM_DELETE_WINDOW", on_closing)

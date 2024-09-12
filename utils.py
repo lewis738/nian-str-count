@@ -1,5 +1,33 @@
 import re
 import cn2an
+import os
+import tempfile
+
+
+def write_to_temp(text):
+    """
+    将文本写入临时文件目录下的`str-count-temp.tmp`文件中
+    :param text: 待写入的文本
+    :return:
+    """
+    temp_path = tempfile.gettempdir()
+    with open(temp_path + 'str-count-temp.tmp', 'w') as file:
+        file.write(text)
+
+
+def read_from_temp():
+    """
+    尝试读取缓存文件内容
+    :return:
+    """
+    temp_path = tempfile.gettempdir()
+    try:
+        # 尝试打开并读取文件内容
+        with open(temp_path + 'str-count-temp.tmp', 'r') as file:
+            return file.read()
+    except FileNotFoundError:
+        # 文件不存在时返回空字符串
+        return ""
 
 
 def get_label_count(label_name):
