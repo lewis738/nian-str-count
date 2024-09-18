@@ -38,7 +38,7 @@ frame.grid_columnconfigure(1, weight=1)
 frame.grid_rowconfigure(1, weight=0)  # 按钮所在行权重为0
 
 # 创建文本输入框
-text_input = tk.Text(frame, wrap="word")
+text_input = tk.Text(frame, wrap="word", undo=True)
 text_input.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 5), pady=(0, 10))
 # 在文本框中插入内容
 text_input.insert(tk.END, read_from_temp())
@@ -57,6 +57,7 @@ def on_closing():
     write_to_temp(input_text)
 
     root.destroy()
+
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
 
