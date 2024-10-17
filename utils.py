@@ -1,7 +1,7 @@
 import re
 import cn2an
-import os
 import tempfile
+from itertools import permutations
 
 
 def write_to_temp(text):
@@ -101,6 +101,21 @@ def beautify_dict(result_dict: dict, label: str):
     return result
 
 
+def get_combination_count(num):
+    """
+    获取数字xyz排列的情况总数，例如123=>123 132 231 213 321=>6，112=>112 121 211=>3
+    :param num: 原始数字
+    :return:
+    """
+    digits = list(num)
+
+    # 使用 itertools.permutations 生成所有可能的排列
+    all_permutations = set(permutations(digits))
+
+    # 返回排列的数量
+    return len(all_permutations)
+
+
 def process_multi_line(multi_line: str):
     """
     输入多行文本，例如"\n837 9单1组\n 123 321 一组\n128 10单"
@@ -121,15 +136,27 @@ def process_multi_line(multi_line: str):
             # 提取X单，Y组，X单Y组的
             sep_line_list.remove(label)
             print(f"{label_count_dict}:{sep_line_list}\t orig:{line}")
+
+            # 如果是复试，那么'单'数量要乘以数字组合数量转为'组'数量，添加到组的计数里，然后清空单数
+            if ("复试" in line or "复式" in line):
+                for num in sep_line_list:
+                    orig_nums = []
+                    total_combin_count = label_count_dict.get('单') * get_combination_count(num)
+                    # 加入到组里
+                    if total_sum_zu.get(total_combin_count):
+                        orig_nums = total_sum_zu.get(total_combin_count)
+                    orig_nums.append(num)
+                    total_sum_zu[total_combin_count] = orig_nums
+                label_count_dict['单'] = 0
+
             orig_nums = []
-            if total_sum_dan.get(label_count_dict.get('单')):
-                # 已经有了，直接加在最后
+            if total_sum_dan.get(label_count_dict.get('单')) and label_count_dict.get('单') != 0:
                 orig_nums = total_sum_dan.get(label_count_dict.get('单'))
             orig_nums.extend(sep_line_list)
             total_sum_dan[label_count_dict.get('单')] = orig_nums
 
             orig_nums = []
-            if total_sum_zu.get(label_count_dict.get('组')):
+            if total_sum_zu.get(label_count_dict.get('组')) and label_count_dict.get('组') != 0:
                 orig_nums = total_sum_zu.get(label_count_dict.get('组'))
             orig_nums.extend(sep_line_list)
             total_sum_zu[label_count_dict.get('组')] = orig_nums
