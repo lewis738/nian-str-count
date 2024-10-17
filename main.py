@@ -6,6 +6,10 @@ from utils import write_to_temp, read_from_temp
 
 def on_button_click():
     input_text = text_input.get("1.0", tk.END)
+    # 处理特殊字符
+    input_text = input_text.replace('\xa0', ' ')
+    text_input.delete("1.0", tk.END)
+    text_input.insert(tk.END, input_text)
 
     processed_dict_dan, processed_dict_zu = process_multi_line(input_text)
     processed_dict_dan = add_up_dan(processed_dict_dan)
@@ -71,6 +75,8 @@ root.mainloop()
 #     837 9单1组
 #     123 321 一组
 #     128 10单
+#     123 复试1单=123，132，213，231，312，321=123 6组
+#     667 677 各复试50单 = 667 676 766=667 3 组*50=150组，=677 767
 #     """
 #     total_sum = process_multi_line(str_in)
 #     print(total_sum)
