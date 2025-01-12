@@ -1,2 +1,2 @@
 conda activate nian-str-count
-pyinstaller -F main.py
+pyinstaller -F -w main.py
