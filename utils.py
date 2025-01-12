@@ -66,7 +66,7 @@ def split_string(input_string):
     :return: list 分割后得到的列表
     """
     # 使用正则表达式定义多个分隔符
-    separators = r"[，。 、,\.]"
+    separators = r"[，。 、,\._—\-]"
     result = re.split(separators, input_string)
     # 去除空字符串
     result = [x for x in result if x]
@@ -128,8 +128,9 @@ def process_multi_line(multi_line: str):
     for line in multi_line.splitlines():
         # 忽略空白行和空行
         if not line.isspace() and not len(line) == 0 and not line.startswith('#'):
-            # TODO: 单独处理特殊量词
+            # TODO: 单独处理特殊量词、表达
             line = line.replace('两', '二')
+            line = line.replace('各', ' ')
             sep_line_list = split_string(line)
             label = get_label(sep_line_list)
             label_count_dict = get_label_count(label)
