@@ -1,28 +1,35 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from utils import process_multi_line, beautify_dict, add_up_dan, add_up_zu, collect_v_count_dict_to_count_v_list_dict
 from utils import write_to_temp, read_from_temp
 
 
 def on_button_click():
-    input_text = text_input.get("1.0", tk.END)
-    # 处理特殊字符
-    input_text = input_text.replace('\xa0', ' ')
-    text_input.delete("1.0", tk.END)
-    text_input.insert(tk.END, input_text)
+    try:
+        input_text = text_input.get("1.0", tk.END)
+        # 处理特殊字符
+        input_text = input_text.replace('\xa0', ' ')
+        text_input.delete("1.0", tk.END)
+        text_input.insert(tk.END, input_text)
 
-    processed_dict_dan, processed_dict_zu = process_multi_line(input_text)
-    processed_dict_dan = add_up_dan(processed_dict_dan)
-    processed_dict_zu = add_up_zu(processed_dict_zu)
-    # 转回数组，以便显示
-    processed_dict_dan = collect_v_count_dict_to_count_v_list_dict(processed_dict_dan)
-    processed_zu_dict = collect_v_count_dict_to_count_v_list_dict(processed_dict_zu)
-    processed_text = beautify_dict(processed_dict_dan, '单') + "\n" + "-"*32 + "\n" + beautify_dict(processed_zu_dict, '组')
+        processed_dict_dan, processed_dict_zu = process_multi_line(input_text)
+        processed_dict_dan = add_up_dan(processed_dict_dan)
+        processed_dict_zu = add_up_zu(processed_dict_zu)
+        # 转回数组，以便显示
+        processed_dict_dan = collect_v_count_dict_to_count_v_list_dict(processed_dict_dan)
+        processed_zu_dict = collect_v_count_dict_to_count_v_list_dict(processed_dict_zu)
+        processed_text = beautify_dict(processed_dict_dan, '单') + "\n" + "-"*32 + "\n" + beautify_dict(processed_zu_dict, '组')
 
-    text_output.config(state=tk.NORMAL)  # 允许更改文本
-    text_output.delete("1.0", tk.END)  # 清除现有文本
-    text_output.insert(tk.END, processed_text)  # 插入新文本
-    text_output.config(state=tk.DISABLED)  # 禁止更改文本
+        text_output.config(state=tk.NORMAL)  # 允许更改文本
+        text_output.delete("1.0", tk.END)  # 清除现有文本
+        text_output.insert(tk.END, processed_text)  # 插入新文本
+        text_output.config(state=tk.DISABLED)  # 禁止更改文本
+    except Exception as e:
+        text_output.config(state=tk.NORMAL)  # 允许更改文本
+        text_output.delete("1.0", tk.END)  # 清除现有文本
+        text_output.config(state=tk.DISABLED)  # 禁止更改文本
+        messagebox.showerror("错误", e)
+
 
 # 创建主窗口
 root = tk.Tk()
