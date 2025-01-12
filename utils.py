@@ -227,3 +227,14 @@ def collect_v_count_dict_to_count_v_list_dict(count_dict):
         orig_nums.append(value)
         count_v_list_dict[count] = orig_nums
     return count_v_list_dict
+
+def get_total_count(processed_dict):
+    """
+    计算总数
+    :param processed_dict:
+    :return:
+    """
+    total = 0
+    for k, v in processed_dict.items():
+        total = total + k * len(v)
+    return total

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from utils import process_multi_line, beautify_dict, add_up_dan, add_up_zu, collect_v_count_dict_to_count_v_list_dict
-from utils import write_to_temp, read_from_temp
+from utils import write_to_temp, read_from_temp, get_total_count
 
 
 def on_button_click():
@@ -17,13 +17,17 @@ def on_button_click():
         processed_dict_zu = add_up_zu(processed_dict_zu)
         # 转回数组，以便显示
         processed_dict_dan = collect_v_count_dict_to_count_v_list_dict(processed_dict_dan)
-        processed_zu_dict = collect_v_count_dict_to_count_v_list_dict(processed_dict_zu)
-        processed_text = beautify_dict(processed_dict_dan, '单') + "\n" + "-"*32 + "\n" + beautify_dict(processed_zu_dict, '组')
+        processed_dict_zu = collect_v_count_dict_to_count_v_list_dict(processed_dict_zu)
+        total_count = get_total_count(processed_dict_dan) + get_total_count(processed_dict_zu)
+        processed_text = beautify_dict(processed_dict_dan, '单') + "\n" + "-"*32 + "\n" + beautify_dict(processed_dict_zu, '组')
 
         text_output.config(state=tk.NORMAL)  # 允许更改文本
         text_output.delete("1.0", tk.END)  # 清除现有文本
         text_output.insert(tk.END, processed_text)  # 插入新文本
         text_output.config(state=tk.DISABLED)  # 禁止更改文本
+
+        count_label.config(text=f"总数：{total_count} ✖ 2 = {total_count * 2}")
+
     except Exception as e:
         text_output.config(state=tk.NORMAL)  # 允许更改文本
         text_output.delete("1.0", tk.END)  # 清除现有文本
@@ -61,6 +65,10 @@ text_output.grid(row=0, column=1, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(5, 0), 
 # 创建按钮并绑定事件
 button = ttk.Button(frame, text="确定", command=on_button_click)
 button.grid(row=1, column=0, columnspan=2, pady=(5, 0))
+
+# 创建用于显示总数的标签，放在右下角
+count_label = ttk.Label(frame, text="总数：0")
+count_label.grid(row=1, column=1, sticky=(tk.E, tk.S), padx=(5, 0), pady=(5, 0))
 
 # 设置窗口关闭时的行为
 def on_closing():
