@@ -10,8 +10,7 @@ name: Upload Python Package
 
 on:
   push:
-    tags:
-      - 'v*.*.*' # 仅在推送版本标签时触发
+    branch: ['main']
 
 permissions:
   contents: read
@@ -40,7 +39,7 @@ jobs:
         run: |
           # 定义包的名称和版本
           PACKAGE_NAME="nian-str-count"
-          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="1.0.0"
           
           # 创建 GitHub Packages 的通用包
           gh package publish file \
