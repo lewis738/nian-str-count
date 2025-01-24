@@ -44,7 +44,7 @@ jobs:
           
           # 创建 GitHub Packages 的通用包
           gh package publish file \
-            "main.exe" \
+            "dist/main.exe" \
             --repository "${{ github.repository }}" \
             --package-type generic \
             --package-name "$PACKAGE_NAME" \
