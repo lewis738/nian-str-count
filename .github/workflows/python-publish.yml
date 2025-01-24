@@ -40,14 +40,10 @@ jobs:
           # 定义包的名称和版本
           PACKAGE_NAME="nian-str-count"
           VERSION="1.0.0"
+          TAG_NAME="${GITHUB_REF#refs/tags/}"
           
           # 创建 GitHub Packages 的通用包
-          gh package publish file \
-            "dist/main.exe" \
-            --repository "${{ github.repository }}" \
-            --package-type generic \
-            --package-name "$PACKAGE_NAME" \
-            --package-version "$VERSION"
+          gh release upload "$TAG_NAME" ./dist/main.exe --clobber
           
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
