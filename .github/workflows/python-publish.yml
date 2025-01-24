@@ -36,9 +36,6 @@ jobs:
           pip install pyinstaller
           pyinstaller -F -w main.py
           
-      - name: Authenticate GitHub CLI
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-
       - name: Upload EXE to GitHub Packages
         run: |
           # 定义包的名称和版本
