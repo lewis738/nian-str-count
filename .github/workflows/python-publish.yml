@@ -10,7 +10,8 @@ name: Upload Python Package
 
 on:
   push:
-    branches: ["main"]
+    tags:
+      - 'v*.*.*' # 仅在推送版本标签时触发
 
 permissions:
   contents: read
@@ -34,19 +35,23 @@ jobs:
           pip install cn2an
           pip install pyinstaller
           pyinstaller -F -w main.py
+          
+      - name: Authenticate GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-      - name: Upload to Release Action
-        # You may pin to the exact commit or the version.
-        # uses: Shopify/upload-to-release@c77c9b3e5d288adaef98a7007bf92340ec6ce03b
-        uses: Shopify/upload-to-release@v2.0.0
-        with:
-          # Artifact name
-          name: nian-str-count
-          # Path to the file to upload
-          path: dist/main.exe
-          # Content type for the file
-          # secrets.GITHUB_TOKEN
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload EXE to GitHub Packages
+        run: |
+          # 定义包的名称和版本
+          PACKAGE_NAME="nian-str-count"
+          VERSION="${GITHUB_REF#refs/tags/}"
+          
+          # 创建 GitHub Packages 的通用包
+          gh package publish file \
+            "main.exe" \
+            --repository "${{ github.repository }}" \
+            --package-type generic \
+            --package-name "$PACKAGE_NAME" \
+            --package-version "$VERSION"
           
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
