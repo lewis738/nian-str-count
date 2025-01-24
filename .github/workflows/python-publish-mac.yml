@@ -39,7 +39,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ls ./dist
-          ls ./dist/main/
-          gh release upload "windows" ./dist/main.app --clobber
+          gh release upload "windows" ./dist/main/main.app --clobber
         
