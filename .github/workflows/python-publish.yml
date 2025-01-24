@@ -37,6 +37,7 @@ jobs:
           
       - name: Upload EXE to GitHub Packages
         run: |
+          gh auth login
           gh release upload "windows" ./dist/main.exe --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
