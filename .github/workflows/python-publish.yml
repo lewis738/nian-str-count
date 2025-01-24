@@ -26,44 +26,19 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-
-      - name: Debug Python Environment
-        run: |
-          python --version
-          where python
-          pip --version
-          where pip
-
-
+        
       - name: Build release distributions
         run: |
           # NOTE: put your own distribution build steps here.
-          python -m pip install --upgrade pip
-          python -m pip install cn2an
-          python -m pip install pyinstaller
-          python -m pyinstaller -F -w main.py
+          pip install --upgrade pip
+          pip install cn2an
+          pip install pyinstaller
+          pyinstaller -F -w main.py
 
-      - name: Debug Python Environment
-        run: |
-          python --version
-          where python
-          pip --version
-          where pip
-          python -m python --version
-          python -m pip --version
-
-      - name: Upload to Release Action
-        # You may pin to the exact commit or the version.
-        # uses: Shopify/upload-to-release@c77c9b3e5d288adaef98a7007bf92340ec6ce03b
-        uses: Shopify/upload-to-release@v2.0.0
+      - uses: actions/upload-artifact@v4
         with:
-          # Artifact name
           name: nian-str-count
-          # Path to the file to upload
           path: dist/main.exe
-          # Content type for the file
-          # secrets.GITHUB_TOKEN
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
           
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
