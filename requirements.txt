@@ -1,2 +1,9 @@
+altgraph==0.17.4
 cn2an==0.5.23
+macholib==1.16.3
+packaging==24.2
+pip==24.3.1
+proces==0.1.7
 pyinstaller==6.11.1
+pyinstaller-hooks-contrib==2024.11
+setuptools==75.8.0
