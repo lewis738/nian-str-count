@@ -1,0 +1,43 @@
+# This workflow will upload a Python Package to PyPI when a release is created
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Build Python Package For Windows
+
+on:
+  push:
+    branches: ['main']
+
+permissions:
+  contents: write  
+
+jobs:
+  release-build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: 'pip'
+          
+      - name: Build release distributions
+        run: |
+          # NOTE: put your own distribution build steps here.
+          pip install --upgrade pip
+          pip install cn2an
+          pip install pyinstaller
+          pyinstaller -F -w main.py
+          
+      - name: Upload EXE to GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "windows" ./dist/main.exe --clobber
+        
