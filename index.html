@@ -38,7 +38,8 @@
             margin: 0 auto; /* 将按钮居中 */
         }
     </style>
-    <script src="https://fastly.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+    <script src="./pyodide_dist/v0.26.2/pyodide.js"></script>
+    <!-- <script src="https://fastly.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script> -->
 </head>
 <body>
     <div class="main-content">
@@ -78,7 +79,9 @@
           const preCode = `sys.stdout = sys.stderr = io.StringIO();`;
 
           async function loadPyodideAndPackages() {
-            var pyodide = await loadPyodide();
+            var pyodide = await loadPyodide({
+                indexURL : "./pyodide_dist/"
+            });
             await pyodide.loadPackage(dependencies);
             pyodide.runPython(`import sys;import io;sys.stdout = io.StringIO()\n${preCode}`);
             console.log("Ready!\n")
@@ -91,7 +94,7 @@
           await pyodide.loadPackage(["micropip"]);
           const micropip = pyodide.pyimport("micropip");
           // micropip.set_index_urls([
-          //   "https://pypi.tuna.tsinghua.edu.cn/simple"
+          //   "https://pypi.tuna.tsinghua.edu.cn/simple" // 清华源会跨域错误
           //   ])
           await micropip.install('cn2an');
           console.log("Dependencies Ready!")
